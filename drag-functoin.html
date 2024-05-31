@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ti AI</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+     
+     #drop-area {
+    
+    border: 2px dashed #ccc;
+    text-align: center;
+    padding: 20px;
+    color: #ccc;
+    float: left;
+  }
+  #drop-area.highlight {
+    color: #333;
+    border-color: #666;
+  }
+  #file-preview {
+    margin-left: 7%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 75%;
+    overflow: scroll;
+    resize: both; /* Allow the div to be resizable */
+    background: #f8f8f8; /* Light grey background to indicate the area */
+  }
+  img, iframe {
+    max-width: 100%;
+    height: 100%;
+  }
+  
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="mt-4 p-5  rounded">
+            <h1>Tinitiate</h1>
+            <p>(c) 2024</p>
+            </div>
+        <div class="row">
+          <div class="col coco">
+           
+            <div id="drop-area">Drag and Drop files here or click to add file</div>
+            <form id="uploadForm" style="display: none;">
+                <input type="file" id="fileInput" name="file" required>
+            </form>
+        </div>
+        <div class="col coco" id="file-preview"><div class="controls">
+           
+        </div><canvas id="pdf-canvas"></canvas>File content will appear here...</div>
+        <div class="col coco" id="preview_table"> <div id="tableContainer" class="mb-3"></div>
+        
+    </div>
+</div> 
+
+<div id="responseContainer"></div>
+    <script src="script.js"></script>
+</body>
+</html>

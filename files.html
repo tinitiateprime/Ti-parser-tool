@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Files List</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="bg-white p-8 rounded shadow-md w-full max-w-4xl">
+    <h1 class="text-2xl font-bold mb-4">Files in <span id="folderNameDisplay"></span></h1>
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <h2 class="text-xl font-bold mb-2">Files</h2>
+        <div id="inputFiles" class="space-y-2"></div>
+      </div>
+      <div><h1>Upload File</h1>
+        <form id="uploadForm">
+            <input type="file" id="fileInput" name="file" required>
+            <input type="text" id="sharepointSiteAddress" name="sharepointSiteAddress" placeholder="SharePoint Site Address" hidden>
+            <input type="text" id="sharepointInputPath" name="sharepointInputPath" placeholder="SharePoint Input Path" hidden>
+            <input type="text" id="sharepointOutputPath" name="sharepointOutputPath" placeholder="SharePoint Output Path" hidden>
+            <input type="text" id="onedriveInputPath" name="onedriveInputPath" placeholder="OneDrive Input Path" hidden>
+            <input type="text" id="onedriveOutputPath" name="onedriveOutputPath" placeholder="OneDrive Output Path" hidden>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="responseContainer"></div></div>
+      <div>
+        <h2 class="text-xl font-bold mb-2">Parsed Files</h2>
+        <div id="outputFiles" class="space-y-2"></div>
+      </div>
+    </div>
+    <button onclick="goBack()" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700 mt-4">Back</button>
+  </div>
+  <script>
+    function displayFiles() {
+      
+      const folderName = new URLSearchParams(window.location.search).get('folder');
+      const inputFiles = JSON.parse(new URLSearchParams(window.location.search).get('inputFiles'));
+      const outputFiles = JSON.parse(new URLSearchParams(window.location.search).get('outputFiles'));
+
+      document.getElementById('folderNameDisplay').textContent = folderName;
+
+      const inputFilesContainer = document.getElementById('inputFiles');
+      inputFiles.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.textContent = file;
+        fileItem.className = 'bg-gray-200 p-2 rounded';
+        inputFilesContainer.appendChild(fileItem);
+      });
+
+      const outputFilesContainer = document.getElementById('outputFiles');
+      outputFiles.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.textContent = file;
+        fileItem.className = 'bg-gray-200 p-2 rounded';
+        outputFilesContainer.appendChild(fileItem);
+      });
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('fileInput');
+    const sharepointSiteAddress = document.getElementById('sharepointSiteAddress').value;
+    const sharepointInputPath = document.getElementById('sharepointInputPath').value;
+    const sharepointOutputPath = document.getElementById('sharepointOutputPath').value;
+    const onedriveInputPath = document.getElementById('onedriveInputPath').value;
+    const onedriveOutputPath = document.getElementById('onedriveOutputPath').value;
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('sharepointSiteAddress', sharepointSiteAddress);
+    formData.append('sharepointInputPath', sharepointInputPath);
+    formData.append('sharepointOutputPath', sharepointOutputPath);
+    formData.append('onedriveInputPath', onedriveInputPath);
+    formData.append('onedriveOutputPath', onedriveOutputPath);
+    
+    try {
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        displayResponse(result);
+    } catch (error) {
+        console.error('Error:', error);
+        displayResponse({ error: 'Error processing file' });
+    }
+});
+
+    window.onload = displayFiles;
+  </script>
+</body>
+</html>

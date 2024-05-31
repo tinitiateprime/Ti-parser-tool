@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Results</title>
+  <link href="https://unpkg.com/tailwindcss@^2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4">Folders for <span id="usernameDisplay"></span></h1>
+    <div id="folderList" class="mt-6"></div>
+    <button onclick="goBack()" class="bg-blue-500 text-white py-2 px-4 rounded mt-4">Go Back</button>
+  </div>
+<script>
+  async function fetchFiles(folder,username) {
+        debugger
+        const response = await window.electronAPI.fetchFiles(username,folder);
+
+        const inputFilesQuery = encodeURIComponent(JSON.stringify(response.inputFiles));
+        const outputFilesQuery = encodeURIComponent(JSON.stringify(response.outputFiles));
+        window.location.href = `files.html?folder=${folder}&inputFiles=${inputFilesQuery}&outputFiles=${outputFilesQuery}`;
+      
+    }
+  function displayFolders() {
+    
+    const username = new URLSearchParams(window.location.search).get('username');
+    const folders = JSON.parse(new URLSearchParams(window.location.search).get('folders'));
+
+    document.getElementById('usernameDisplay').textContent = username;
+    const folderList = document.getElementById('folderList');
+
+    folders.forEach(folder => {
+        
+      const folderItem = document.createElement('div');
+      folderItem.textContent = folder;
+      folderItem.className = 'bg-gray-200 p-2 mt-2 rounded hover:bg-gray-300 cursor-pointer';
+      folderItem.addEventListener('click', () => {
+        fetchFiles(folder,username);
+      });
+      folderList.appendChild(folderItem);
+    });
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+
+  window.onload = displayFolders;
+  </script>
+</body>
+</html>
