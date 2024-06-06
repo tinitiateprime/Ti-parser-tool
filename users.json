@@ -1,0 +1,22 @@
+[
+  {
+    "username": "user1",
+    "status": "Disabled"
+  },
+  {
+    "username": "user2",
+    "status": "Disabled"
+  },
+  {
+    "username": "gdf",
+    "status": "Archived"
+  },
+  {
+    "username": "asdfasdf",
+    "status": "Active"
+  },
+  {
+    "username": "sdfg",
+    "status": "Active"
+  }
+]

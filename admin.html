@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ti-apps - Admin</title>
+  <link rel="stylesheet" href="output.css">
+</head>
+<body class="flex flex-col h-screen">
+  <header class="bg-gray-800 text-white text-center p-4 flex justify-between items-center">
+    <h1>Ti Parser Admin</h1>
+    <div>
+      <button id="archived-users" class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-700 mr-4">Archived Users</button>
+      <button id="logout" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">Logout</button>
+    </div>
+  </header>
+  <main class="flex-grow p-6">
+    <h2 class="text-2xl mb-4">User Management</h2>
+    <div class="mb-4">
+      <button id="add-user" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Add New User</button>
+    </div>
+    <table id="user-table" class="min-w-full bg-white">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th class="w-1/4 px-4 py-2">Username</th>
+          <th class="w-1/4 px-4 py-2">Status</th>
+          <th class="w-1/2 px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <!-- User rows will be populated here -->
+      </tbody>
+    </table>
+  </main>
+  <footer class="bg-gray-800 text-white text-center p-4">
+    <p>&copy; 2024 Tinitiate Technologies Pvt Ltd</p>
+  </footer>
+
+  <!-- Modal for adding new user -->
+  <div id="user-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-sm">
+      <span class="close-button text-gray-500 hover:text-gray-800 cursor-pointer float-right">&times;</span>
+      <h2 class="text-2xl mb-4">Add New User</h2>
+      <form id="user-form">
+        <label for="new-username" class="block text-sm font-medium text-gray-700">Username:</label>
+        <input type="text" id="new-username" name="new-username" required class="mt-1 mb-4 p-2 border border-gray-300 rounded w-full">
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">Add User</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for renaming user -->
+  <div id="rename-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-sm">
+      <span class="close-rename-button text-gray-500 hover:text-gray-800 cursor-pointer float-right">&times;</span>
+      <h2 class="text-2xl mb-4">Rename User</h2>
+      <form id="rename-form">
+        <label for="rename-username" class="block text-sm font-medium text-gray-700">New Username:</label>
+        <input type="text" id="rename-username" name="rename-username" required class="mt-1 mb-4 p-2 border border-gray-300 rounded w-full">
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">Rename User</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for archived users -->
+  <div id="archived-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
+      <span class="close-archived-button text-gray-500 hover:text-gray-800 cursor-pointer float-right">&times;</span>
+      <h2 class="text-2xl mb-4">Archived Users</h2>
+      <table id="archived-table" class="min-w-full bg-white">
+        <thead class="bg-gray-800 text-white">
+          <tr>
+            <th class="w-1/2 px-4 py-2">Username</th>
+            <th class="w-1/2 px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-700">
+          <!-- Archived user rows will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

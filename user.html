@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Management</title>
+    <link href="output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="tabs flex space-x-4 p-4 bg-gray-300 rounded-t-lg">
+        <div class="tab p-2 cursor-pointer bg-gray-400 rounded-lg hover:bg-gray-500" onclick="showTab('clients-management')">Clients Management</div>
+        <div class="tab p-2 cursor-pointer bg-gray-400 rounded-lg hover:bg-gray-500" onclick="showTab('workspace')">Workspace</div>
+        <div class="tab p-2 cursor-pointer bg-gray-400 rounded-lg hover:bg-gray-500" onclick="showTab('reports')">REPORTS</div>
+        <div class="tab p-2 cursor-pointer bg-gray-400 rounded-lg hover:bg-gray-500" onclick="showTab('settings')">Settings</div>
+    </div>
+
+    <div id="clients-management" class="tab-content p-4 bg-white rounded-b-lg shadow-md">
+        <div class="form-section mb-4">
+            <h2 class="text-xl font-bold">Add Client</h2>
+            <label class="block mt-2">Client name</label>
+            <input type="text" id="add-client-name" class="border border-gray-500 rounded p-2 mt-1 w-full">
+            <label class="block mt-2">Type</label>
+            <select id="add-client-type" class="border border-gray-500 rounded p-2 mt-1 w-full">
+                <option value="bank-statements">bank-statements</option>
+                <option value="invoices">invoices</option>
+                <option value="vouchers">vouchers</option>
+            </select>
+            <label class="block mt-2">Period</label>
+            <select id="add-client-period" class="border border-gray-500 rounded p-2 mt-1 w-full">
+                <option value="weekly">weekly</option>
+                <option value="monthly">monthly</option>
+                <option value="yearly">yearly</option>
+                <option value="fortnightly">fortnightly</option>
+                <option value="working days">working days</option>
+            </select>
+            <button onclick="addClient()" class="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Add Client</button>
+        </div>
+        <div class="form-section mb-4">
+            <h2 class="text-xl font-bold">Modify client</h2>
+            <label class="block mt-2">Existing Client name</label>
+            <input type="text" id="modify-client-name" class="border border-gray-500 rounded p-2 mt-1 w-full">
+            <label class="block mt-2">Type</label>
+            <select id="modify-client-type" class="border border-gray-500 rounded p-2 mt-1 w-full">
+                <option value="bank-statements">bank-statements</option>
+                <option value="invoices">invoices</option>
+                <option value="vouchers">vouchers</option>
+            </select>
+            <label class="block mt-2">Period</label>
+            <select id="modify-client-period" class="border border-gray-500 rounded p-2 mt-1 w-full">
+                <option value="weekly">weekly</option>
+                <option value="monthly">monthly</option>
+                <option value="yearly">yearly</option>
+                <option value="fortnightly">fortnightly</option>
+                <option value="working days">working days</option>
+            </select>
+            <button onclick="modifyClient()" class="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Modify Client</button>
+        </div>
+    </div>
+
+    <div id="workspace" class="tab-content p-4 bg-white rounded-b-lg shadow-md hidden">
+        <h2 class="text-xl font-bold">Workspace</h2>
+        <div id="client-list"></div>
+    </div>
+
+    <div id="reports" class="tab-content p-4 bg-white rounded-b-lg shadow-md hidden">
+        <h2 class="text-xl font-bold">Reports</h2>
+        <p>Hi</p>
+    </div>
+
+    <div id="settings" class="tab-content p-4 bg-white rounded-b-lg shadow-md hidden">
+        <h2 class="text-xl font-bold">Settings</h2>
+        <p>Hi</p>
+    </div>
+
+    <script>
+        
+        // JavaScript functions to handle tab switching and form actions
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+        }
+
+        // Function to add a client
+        async function addClient() {
+            const clientName = document.getElementById('add-client-name').value;
+            const clientType = document.getElementById('add-client-type').value;
+            const clientPeriod = document.getElementById('add-client-period').value;
+            
+            const client = {
+                name: clientName,
+                type: clientType,
+                period: clientPeriod
+            };
+
+            const success = await window.electron.writeClient(client);
+            if (success) {
+                alert('Client added successfully!');
+                listClients();
+            } else {
+                alert('Failed to add client.');
+            }
+
+            const sharepointSuccess = await window.electron.saveClientToSharePoint(client);
+            if (sharepointSuccess) {
+                alert('Client folders created in SharePoint successfully!');
+            } else {
+                alert('Failed to create client folders in SharePoint.');
+            }
+        }
+
+        // Function to modify a client
+        async function modifyClient() {
+            const clientName = document.getElementById('modify-client-name').value;
+            const clientType = document.getElementById('modify-client-type').value;
+            const clientPeriod = document.getElementById('modify-client-period').value;
+
+            const client = {
+                name: clientName,
+                type: clientType,
+                period: clientPeriod
+            };
+
+            const success = await window.electron.modifyClient(client);
+            if (success) {
+                alert('Client modified successfully!');
+                listClients();
+            } else {
+                alert('Failed to modify client.');
+            }
+
+            const sharepointSuccess = await window.electron.saveClientToSharePoint(client);
+            if (sharepointSuccess) {
+                alert('Client folders created in SharePoint successfully!');
+            } else {
+                alert('Failed to create client folders in SharePoint.');
+            }
+        }
+
+        // Function to list clients in the workspace tab
+        async function listClients() {
+            const clientListDiv = document.getElementById('client-list');
+            const clients = await window.electron.readClients();
+
+            clientListDiv.innerHTML = '';
+            clients.forEach(client => {
+                const clientDiv = document.createElement('div');
+                clientDiv.textContent = `Name: ${client.name}, Type: ${client.type}, Period: ${client.period}`;
+                clientListDiv.appendChild(clientDiv);
+            });
+        }
+
+        // Call the function to list clients when the page loads
+        window.onload = listClients;
+    </script>
+</body>
+</html>

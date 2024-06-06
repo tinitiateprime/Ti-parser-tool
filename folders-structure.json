@@ -1,0 +1,20 @@
+{
+    "folder-name-by-sources": [
+      "bank-statements",
+      "invoices",
+      "vouchers"
+    ],
+    "periodic-denominations": [
+      "weekly",
+      "monthly",
+      "yearly",
+      "fortnightly",
+      "working days"
+    ],
+    "folders": {
+      "source-folder": "sources",
+      "transformed-folder": "transformed",
+      "audited-folder": "audited"
+    }
+  }
+  
